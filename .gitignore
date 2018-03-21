@@ -2,3 +2,4 @@ config.json
 Birds/
 __pycache__/
 birds.db
+testing.py
