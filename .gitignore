@@ -1,5 +1,7 @@
 config.json
 Birds/
+Birds.zip
 __pycache__/
 birds.db
 testing.py
+

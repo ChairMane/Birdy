@@ -2,7 +2,7 @@
 import discord
 import random
 import json
-from data_holder import image_dict, families
+from data_holder import *
 
 config = json.load(open('config.json'))
 
