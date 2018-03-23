@@ -165,3 +165,35 @@ species_by_family = { 'sparrow'         : ['aberts towhee', 'american pipit', 'a
                      ,'warbler'         : ['american redstart', 'arctic warbler', 'bay breasted warbler', 'bells vireo', 'black and white warbler', 'blackburnian warbler', 'black capped vireo', 'blackpoll warbler', 'black throated blue warbler', 'black throated gray warbler', 'black throated green warbler', 'black whiskered vireo', 'blue headed vireo', 'blue winged warbler', 'canada warbler', 'cape may warbler', 'cassins vireo', 'cerulean warbler', 'chestnut sided warbler', 'common yellowthroat', 'connecticut warbler', 'golden cheeked warbler', 'golden winged warbler', 'graces warbler', 'gray vireo', 'hermit warbler', 'hooded warbler', 'huttons vireo', 'kentucky warbler', 'kirtlands warbler', 'louisiana waterthrush', 'lucys warbler', 'macgillivrays warbler', 'magnolia warbler', 'mourning warbler', 'nashville warbler', 'northern parula', 'northern waterthrush', 'orange crowned warbler', 'ovenbird', 'painted redstart', 'palm warbler', 'philadelphia vireo', 'pine warbler', 'plumbeous vireo', 'prairie warbler', 'prothonotary warbler', 'red eyed vireo', 'red faced warbler', 'swainsons warbler', 'tennessee warbler', 'townsends warbler', 'virginias warbler', 'warbling vireo', 'white eyed vireo', 'wilsons warbler', 'worm eating warbler', 'yellow breasted chat', 'yellow rumped warbler', 'yellow throated vireo', 'yellow throated warbler', 'yellow warbler']
                     }
 
+help_message = "```\n" \
+               "INFO: Creator of this bot is ChairMane: https://github.com/ChairMane/Birdy\n\n" \
+               "DESCRIPTION: Birdy is for those discord users who are interested\n" \
+               "in birds.\n\n" \
+               "COMMAND PREFIX: To be able to use the commands, '<>' must be\n" \
+               "present before any commands are used.\n\n" \
+               "Below are commands available:\n\n" \
+               "__________________________________________________________\n\n" \
+               "COMMAND:              <> <name_of_bird>\n" \
+               "EXAMPLES:             <> white crowned sparrow\n" \
+               "                      <> northern parula\n" \
+               "                      <> annas hummingbird\n" \
+               "DESCRIPTION: If you know the name of the bird you want,\n" \
+               "you can call this command to grab information on it.\n" \
+               "__________________________________________________________\n\n" \
+               "COMMAND:              <> rand\n" \
+               "DESCRIPTION: Use <> rand to grab information on a random\n" \
+               "within the Birdy database.\n" \
+               "__________________________________________________________\n\n" \
+               "COMMAND:              <> rand <shape_of_bird>\n" \
+               "EXAMPLES:             <> rand finch\n" \
+               "                      <> rand sparrow\n" \
+               "DESCRIPTION: If you want a random bird within a specific\n" \
+               "bird shape category, you call this command.\n" \
+               "__________________________________________________________\n\n" \
+               "COMMAND:              <> help\n" \
+               "DESCRIPTION: If you forget commands, you can call this\n" \
+               "command to get a list of commands.\n" \
+               "__________________________________________________________\n\n" \
+               "LIST OF CURRENT BIRD SHAPES:\n" \
+               "Sparrow, Finch, Warbler, Hummingbird.\n" \
+               "```"
