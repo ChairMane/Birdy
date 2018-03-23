@@ -8,9 +8,48 @@ config = json.load(open('config.json'))
 
 client = discord.Client()
 
+#TODO-ERROR HANDLING LIKE SHOWING WHAT COMMANDS ARE AVAILABLE
+
+#This gets printed out when only '<>' is sent.
 @client.event
-async def error_handle():
+async def error_handle(message):
     await client.send_message(message.channel, "Invalid command entered. Please enter `<> help` for commands.")
+
+@client.event
+async def command_list(message):
+    help_message = "```\n" \
+                   "INFO: Creator of this bot is ChairMane: https://github.com/ChairMane/Birdy\n\n" \
+                   "DESCRIPTION: Birdy is for those discord users who are interested\n" \
+                   "in birds.\n\n" \
+                   "COMMAND PREFIX: To be able to use the commands, '<>' must be\n" \
+                   "present before any commands are used.\n\n" \
+                   "Below are commands available:\n\n" \
+                   "__________________________________________________________\n\n" \
+                   "COMMAND:              <> <name_of_bird>\n" \
+                   "EXAMPLES:             <> white crowned sparrow\n" \
+                   "                      <> northern parula\n" \
+                   "                      <> annas hummingbird\n" \
+                   "DESCRIPTION: If you know the name of the bird you want,\n" \
+                   "you can call this command to grab information on it.\n" \
+                   "__________________________________________________________\n\n" \
+                   "COMMAND:              <> rand\n" \
+                   "DESCRIPTION: Use <> rand to grab information on a random\n" \
+                   "within the Birdy database.\n" \
+                   "__________________________________________________________\n\n" \
+                   "COMMAND:              <> rand <shape_of_bird>\n" \
+                   "EXAMPLES:             <> rand finch\n" \
+                   "                      <> rand sparrow\n" \
+                   "DESCRIPTION: If you want a random bird within a specific\n" \
+                   "bird shape category, you call this command.\n" \
+                   "__________________________________________________________\n\n" \
+                   "COMMAND:              <> help\n" \
+                   "DESCRIPTION: If you forget commands, you can call this\n" \
+                   "command to get a list of commands.\n" \
+                   "__________________________________________________________\n\n" \
+                   "LIST OF CURRENT BIRD SHAPES:\n" \
+                   "Sparrow, Finch, Warbler, Hummingbird.\n" \
+                   "```"
+    await client.send_message(message.author, help_message)
 
 #rand() will grab a random bird from the image_dict dictionary, using a random key.
 #For example, if you want a random bird, you write '<> rand'
@@ -55,9 +94,11 @@ async def get_species(content, image_dict, message):
     
 @client.event
 async def handle_command(content, message, image_dict):
-
-    if len(content) == 0:
-        await error_handle()
+    commands = ['help', 'rand']
+    if content[1] not in commands:
+        await error_handle(message)
+    elif content[1] == 'help':
+        await command_list(message)
     elif content[1] == 'rand':
         await rand(content[1:], image_dict, message)
     elif content[1] != 'rand':
