@@ -8,7 +8,7 @@ config = json.load(open('config.json'))
 
 client = discord.Client()
 
-#TODO-ERROR HANDLING LIKE SHOWING WHAT COMMANDS ARE AVAILABLE
+#TODO- Make `<> <shape_of_bird>` a command that gives the user a list of birds from that category
 
 #This gets printed out when only '<>' is sent.
 @client.event
@@ -51,8 +51,9 @@ async def rand(content, image_dict, message):
 #For example, if you want information on the white crowned sparrow, you write '<> white crowned sparrow'    
 @client.event
 async def get_species(content, image_dict, message):
+    
     usr_msg = ' '.join(content).lower()
-    print(usr_msg)
+
     name, species, desc, filename_list = image_dict[usr_msg]
     embed = discord.Embed(title='Name', description=species, color=0x6606BA)
     embed.add_field(name="Description", value=desc, inline=False) 
@@ -63,13 +64,13 @@ async def get_species(content, image_dict, message):
 @client.event
 async def handle_command(content, message, image_dict):
     commands = ['rand', 'help']
-    if content[1] == None:
+    if len(content) < 2:
         await error_handle(message)
     elif content[1] == 'help':
         await command_list(message)
     elif content[1] == 'rand':
         await rand(content[1:], image_dict, message)
-    elif content[1] not in commands:
+    elif len(content) >= 2:
         await get_species(content[1:], image_dict, message)
 
 
