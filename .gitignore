@@ -4,4 +4,5 @@ Birds.zip
 __pycache__/
 birds.db
 testing.py
-
+allbirdsscraper.py
+BirdyEXT.py

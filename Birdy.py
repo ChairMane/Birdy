@@ -9,11 +9,20 @@ config = json.load(open('config.json'))
 client = discord.Client()
 
 #TODO- Make `<> <shape_of_bird>` a command that gives the user a list of birds from that category
+#TODO- Try accessing eBird API, for sightings. (Look into REST API)
+#TODO- Make funny bird image function
+#TODO- Look into refactoring code. Maybe use ext.commands at one point
+#TODO- Make command `<> <bird_found> <where>`
+#TODO- Allow users to make lists of birds they have seen
 
 #This gets printed out when only '<>' is sent.
 @client.event
 async def error_handle(message):
     await client.send_message(message.channel, "Invalid command entered. Please enter `<> help` for commands.")
+
+@client.event
+async def command_list(message):
+    await client.send_message(message.author, help_message)
 
 @client.event
 async def command_list(message):
