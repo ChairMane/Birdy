@@ -1,8 +1,8 @@
 from data_holder import *
+from prettytable import PrettyTable
 import discord
 import random
 
-#TODO- Make `<> <shape_of_bird>` a command that gives the user a list of birds from that category
 #TODO- Try accessing eBird API, for sightings. (Look into REST API)
 #TODO- Make funny bird image function
 #TODO- Look into refactoring code. Maybe use ext.commands at one point
@@ -14,9 +14,22 @@ class birdyCommands:
     def __init__(self, brdy):
         self.brdy = brdy
 
+    async def list_birds(self, content, species_by_family, message):
+        birds = ""
+        usr_msg = content[1].lower()
+        bird_list = species_by_family[usr_msg]
+        for i in range(0, len(bird_list)):
+            if i % 3 == 0:
+                birds += '\n'
+            birds += '{}. '.format(i + 1) + '{message:{fill}{align}}'.format(message=bird_list[i], fill=' ', align='<25')
+        await self.brdy.send_message(message.author, '```fix\n' + 'Below is the list of ' + usr_msg + 's:\n' + birds + '\n```')
 
+    #rand() grabs a random bird from the dictionary image_dict and outputs
+    #basic information about the random bird grabbed
     async def rand(self, content, image_dict, message):
 
+        #If <> rand <shape_of_bird> was called, you would get only a random bird within
+        #the shape of the bird category.
         if (len(content) > 1):
             family_name = ' '.join(content[1:]).lower()
             get_family = species_by_family[family_name]
@@ -28,6 +41,7 @@ class birdyCommands:
             await self.brdy.send_file(message.channel, self.get_random(filename_list))
             await self.brdy.send_message(message.channel, embed=embed)
 
+        #Otherwise just output a random bird from the entire dictionary
         else:
             rand_key = random.choice(list(image_dict))
             name, species, desc, filename_list = image_dict[rand_key]
@@ -37,8 +51,8 @@ class birdyCommands:
             await self.brdy.send_file(message.channel, self.get_random(filename_list))
             await self.brdy.send_message(message.channel, embed=embed)
 
-
-
+    #get_species() grabs a bird from the dictionary with the same name inputted by the
+    #user. EXAMPLE: <> white crowned sparrow
     async def get_species(self, content, image_dict, message):
 
         usr_msg = ' '.join(content).lower()
@@ -50,7 +64,7 @@ class birdyCommands:
         await self.brdy.send_message(message.channel, embed=embed)
 
 
-    async def handle_command(self, content, message, image_dict):
+    async def handle_command(self, content, message, image_dict, species_by_family):
         commands = ['rand', 'help']
         if len(content) < 2:
             await self.error_handle(message)
@@ -58,6 +72,8 @@ class birdyCommands:
             await self.command_list(message)
         elif content[1] == 'rand':
             await self.rand(content[1:], image_dict, message)
+        elif content[1] in species_by_family:
+            await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
             await self.get_species(content[1:], image_dict, message)
 

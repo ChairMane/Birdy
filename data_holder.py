@@ -200,13 +200,21 @@ species_by_family = { 'sparrow'         : ['aberts towhee', 'american pipit', 'a
                      ,'auk'             : ['ancient murrelet', 'atlantic puffin', 'black guillemot', 'cassins auklet', 'common murre', 'dovekie', 'horned puffin', 'marbled murrelet', 'parakeet auklet', 'pigeon guillemot', 'razorbill', 'rhinoceros auklet', 'thick billed murre', 'tufted puffin']
                     }
 
-help_message = "```\n" \
+help_message = "```fix\n" \
                "INFO: Creator of this bot is ChairMane: https://github.com/ChairMane/Birdy\n\n" \
                "DESCRIPTION: Birdy is for those discord users who are interested\n" \
                "in birds.\n\n" \
                "COMMAND PREFIX: To be able to use the commands, '<>' must be\n" \
                "present before any commands are used.\n\n" \
                "Below are commands available:\n\n" \
+               "__________________________________________________________\n\n" \
+               "COMMAND:              <> <shape_of_bird>\n" \
+               "EXAMPLES:             <> sparrow\n" \
+               "                      <> finch\n" \
+               "                      <> warbler\n" \
+               "DESCRIPTION: This command gives the user a list of birds within\n" \
+               "the shape of bird category. So if you want a list of birds that\n" \
+               "have the shape of a sparrow, you input <> sparrow.\n" \
                "__________________________________________________________\n\n" \
                "COMMAND:              <> <name_of_bird>\n" \
                "EXAMPLES:             <> white crowned sparrow\n" \
@@ -230,5 +238,5 @@ help_message = "```\n" \
                "command to get a list of commands.\n" \
                "__________________________________________________________\n\n" \
                "LIST OF CURRENT BIRD SHAPES:\n" \
-               "Sparrow, Finch, Warbler, Hummingbird.\n" \
+               "Sparrow, Finch, Warbler, Hummingbird, Auks.\n" \
                "```"
