@@ -5,19 +5,21 @@ import random
 
 #TODO- Try accessing eBird API, for sightings. (Look into REST API)
 #TODO- Make funny bird image function
-#TODO- Look into refactoring code. Maybe use ext.commands at one point
+#TODO- Look into maybe using ext.commands at one point
 #TODO- Make command `<> <bird_found> <where>`
 #TODO- Allow users to make lists of birds they have seen
+#TODO- Make <> quiz function that tests user with bird image.
 
 class birdyCommands:
 
     def __init__(self, brdy):
         self.brdy = brdy
 
+    #Grabs a list of birds from a category of shape.
     async def list_birds(self, content, species_by_family, message):
         birds = ""
         usr_msg = content[1].lower()
-        bird_list = species_by_family[usr_msg]
+        bird_list = species_by_family[usr_msg.lower()]
         for i in range(0, len(bird_list)):
             if i % 3 == 0:
                 birds += '\n'
