@@ -1,5 +1,5 @@
 from data_holder import *
-from prettytable import PrettyTable
+import json
 import discord
 import random
 
@@ -9,6 +9,9 @@ import random
 #TODO- Make command `<> <bird_found> <where>`
 #TODO- Allow users to make lists of birds they have seen
 #TODO- Make <> quiz function that tests user with bird image.
+#TODO- Look into sending bird calls and songs
+
+birds = json.load(open('birdsDB.json'))
 
 class birdyCommands:
 
@@ -37,7 +40,7 @@ class birdyCommands:
             get_family = species_by_family[family_name]
             rand_bird = random.choice(get_family)
 
-            name, species, desc, filename_list = image_dict[rand_bird]
+            name, species, desc, filename_list = birds[rand_bird]
             embed = discord.Embed(title='Name', description=species, color=0x6606BA)
             embed.add_field(name="Description", value=desc, inline=False)
             await self.brdy.send_file(message.channel, self.get_random(filename_list))
@@ -45,8 +48,8 @@ class birdyCommands:
 
         #Otherwise just output a random bird from the entire dictionary
         else:
-            rand_key = random.choice(list(image_dict))
-            name, species, desc, filename_list = image_dict[rand_key]
+            rand_key = random.choice(list(birds))
+            name, species, desc, filename_list = birds[rand_key]
 
             embed = discord.Embed(title='Name', description=species, color=0x6606BA)
             embed.add_field(name="Description", value=desc, inline=False)
@@ -59,7 +62,7 @@ class birdyCommands:
 
         usr_msg = ' '.join(content).lower()
 
-        name, species, desc, filename_list = image_dict[usr_msg]
+        name, species, desc, filename_list = birds[usr_msg]
         embed = discord.Embed(title='Name', description=species, color=0x6606BA)
         embed.add_field(name="Description", value=desc, inline=False)
         await self.brdy.send_file(message.channel, self.get_random(filename_list))
