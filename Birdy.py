@@ -30,7 +30,7 @@ class Birdy(discord.Client):
 
         if pfx == content[0]:
             # send to birdyCommands.handle_command() to do something with
-            await self.com.handle_command(content, message, image_dict, species_by_family)
+            await self.com.handle_command(content, message, species_by_family)
 
 brdy = Birdy()
 brdy.run(config['token'])

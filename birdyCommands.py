@@ -31,7 +31,7 @@ class birdyCommands:
 
     #rand() grabs a random bird from the dictionary image_dict and outputs
     #basic information about the random bird grabbed
-    async def rand(self, content, image_dict, message):
+    async def rand(self, content, message):
 
         #If <> rand <shape_of_bird> was called, you would get only a random bird within
         #the shape of the bird category.
@@ -58,7 +58,7 @@ class birdyCommands:
 
     #get_species() grabs a bird from the dictionary with the same name inputted by the
     #user. EXAMPLE: <> white crowned sparrow
-    async def get_species(self, content, image_dict, message):
+    async def get_species(self, content, message):
 
         usr_msg = ' '.join(content).lower()
 
@@ -69,18 +69,18 @@ class birdyCommands:
         await self.brdy.send_message(message.channel, embed=embed)
 
 
-    async def handle_command(self, content, message, image_dict, species_by_family):
+    async def handle_command(self, content, message, species_by_family):
         commands = ['rand', 'help']
         if len(content) < 2:
             await self.error_handle(message)
         elif content[1] == 'help':
             await self.command_list(message)
         elif content[1] == 'rand':
-            await self.rand(content[1:], image_dict, message)
+            await self.rand(content[1:], message)
         elif content[1] in species_by_family:
             await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
-            await self.get_species(content[1:], image_dict, message)
+            await self.get_species(content[1:], message)
 
     async def error_handle(self, message):
         await self.brdy.send_message(message.channel, "Invalid command entered. Please enter `<> help` for commands.")
