@@ -18,6 +18,14 @@ class birdyCommands:
     def __init__(self, brdy):
         self.brdy = brdy
 
+
+    async def birbs(self, content, message):
+        meme_index = random.choice(list(range(1,155)))
+        filename = "Memes/{}.jpg".format(meme_index)
+
+        await self.brdy.send_file(message.channel, filename)
+
+
     #Grabs a list of birds from a category of shape.
     async def list_birds(self, content, species_by_family, message):
         birds = ""
@@ -43,6 +51,7 @@ class birdyCommands:
             name, species, desc, filename_list = birds[rand_bird]
             embed = discord.Embed(title='Name', description=species, color=0x6606BA)
             embed.add_field(name="Description", value=desc, inline=False)
+
             await self.brdy.send_file(message.channel, self.get_random(filename_list))
             await self.brdy.send_message(message.channel, embed=embed)
 
@@ -53,6 +62,7 @@ class birdyCommands:
 
             embed = discord.Embed(title='Name', description=species, color=0x6606BA)
             embed.add_field(name="Description", value=desc, inline=False)
+
             await self.brdy.send_file(message.channel, self.get_random(filename_list))
             await self.brdy.send_message(message.channel, embed=embed)
 
@@ -65,18 +75,22 @@ class birdyCommands:
         name, species, desc, filename_list = birds[usr_msg]
         embed = discord.Embed(title='Name', description=species, color=0x6606BA)
         embed.add_field(name="Description", value=desc, inline=False)
+
         await self.brdy.send_file(message.channel, self.get_random(filename_list))
         await self.brdy.send_message(message.channel, embed=embed)
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help']
-        if len(content) < 2:
+        commands = ['rand', 'help', 'birbs']
+        usr_msg = ' '.join(content[1:]).lower()
+        if usr_msg not in commands and usr_msg not in species_by_family and usr_msg not in birds:
             await self.error_handle(message)
         elif content[1] == 'help':
             await self.command_list(message)
         elif content[1] == 'rand':
             await self.rand(content[1:], message)
+        elif content[1] == 'birbs':
+            await self.birbs(content[1:], message)
         elif content[1] in species_by_family:
             await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
