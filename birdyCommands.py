@@ -83,15 +83,16 @@ class birdyCommands:
     async def handle_command(self, content, message, species_by_family):
         commands = ['rand', 'help', 'birbs']
         usr_msg = ' '.join(content[1:]).lower()
-        if usr_msg not in commands and usr_msg not in species_by_family and usr_msg not in birds:
+
+        if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
             await self.error_handle(message)
-        elif content[1] == 'help':
+        elif content[1].lower() == 'help':
             await self.command_list(message)
-        elif content[1] == 'rand':
+        elif content[1].lower() == 'rand':
             await self.rand(content[1:], message)
-        elif content[1] == 'birbs':
+        elif content[1].lower() == 'birbs':
             await self.birbs(content[1:], message)
-        elif content[1] in species_by_family:
+        elif content[1].lower() in species_by_family:
             await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
             await self.get_species(content[1:], message)
