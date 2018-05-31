@@ -4,7 +4,6 @@ import discord
 import random
 
 #TODO- Try accessing eBird API, for sightings. (Look into REST API)
-#TODO- Make funny bird image function
 #TODO- Look into maybe using ext.commands at one point
 #TODO- Make command `<> <bird_found> <where>`
 #TODO- Allow users to make lists of birds they have seen
@@ -12,6 +11,7 @@ import random
 #TODO- Look into sending bird calls and songs
 
 birds = json.load(open('birdsDB.json'))
+factlist = json.load(open('birdfacts.json'))
 
 class birdyCommands:
 
@@ -19,8 +19,14 @@ class birdyCommands:
         self.brdy = brdy
 
 
+    async def facts(self, content, message):
+        fact = factlist[str(random.randint(1,100))]
+        embed = discord.Embed(title='Fact:', description=fact, color=0x6606BA)
+
+        await self.brdy.send_message(message.channel, embed=embed)
+
     async def birbs(self, content, message):
-        meme_index = random.choice(list(range(1,155)))
+        meme_index = random.randint(1,174)
         filename = "Memes/{}.jpg".format(meme_index)
 
         await self.brdy.send_file(message.channel, filename)
@@ -81,7 +87,7 @@ class birdyCommands:
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help', 'birbs']
+        commands = ['rand', 'help', 'birbs', 'fact']
         usr_msg = ' '.join(content[1:]).lower()
 
         if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
@@ -92,6 +98,8 @@ class birdyCommands:
             await self.rand(content[1:], message)
         elif content[1].lower() == 'birbs':
             await self.birbs(content[1:], message)
+        elif content[1].lower() == 'fact':
+            await self.facts(content[1:], message)
         elif content[1].lower() in species_by_family:
             await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
