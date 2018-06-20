@@ -8,7 +8,7 @@ import random
 #TODO- Make command `<> <bird_found> <where>`
 #TODO- Allow users to make lists of birds they have seen
 #TODO- Make <> quiz function that tests user with bird image.
-#TODO- Look into sending bird calls and songs
+#TODO- Look into sending bird calls and songs (Sent the same way images are uploaded)
 
 birds = json.load(open('birdsDB.json'))
 factlist = json.load(open('birdfacts.json'))
@@ -18,6 +18,8 @@ class birdyCommands:
     def __init__(self, brdy):
         self.brdy = brdy
 
+    async def song(self, content, message):
+        await self.brdy.send_file(message.channel, "Audio/Auks/Ancient Murrelet/song.mp3")
 
     async def facts(self, content, message):
         fact = factlist[str(random.randint(1,100))]
@@ -87,7 +89,7 @@ class birdyCommands:
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help', 'birbs', 'fact']
+        commands = ['rand', 'help', 'birbs', 'fact', 'test']
         usr_msg = ' '.join(content[1:]).lower()
 
         if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
@@ -100,6 +102,8 @@ class birdyCommands:
             await self.birbs(content[1:], message)
         elif content[1].lower() == 'fact':
             await self.facts(content[1:], message)
+        elif content[1].lower() == 'test':
+            await self.song(content[1:], message)
         elif content[1].lower() in species_by_family:
             await self.list_birds(content, species_by_family, message)
         elif len(content) >= 2:
