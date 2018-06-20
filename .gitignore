@@ -2,6 +2,7 @@ config.json
 Birds/
 Memes/
 Audio/
+Bird_e/
 Birds.zip
 __pycache__/
 birds.db
