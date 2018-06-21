@@ -1,4 +1,5 @@
 from data_holder import *
+from eBirdAPI import *
 import json
 import discord
 import random
@@ -12,6 +13,7 @@ import random
 
 birds = json.load(open('birdsDB.json'))
 factlist = json.load(open('birdfacts.json'))
+bird_e = Bird_e()
 
 class birdyCommands:
 
@@ -33,6 +35,31 @@ class birdyCommands:
 
         await self.brdy.send_file(message.channel, filename)
 
+    async def get_recent(self, content, message):
+        variables = ' '.join(content[2:])
+        arguments = variables.split(' ')
+        regional_code = ''
+        maxResults = '25'
+        back = ''
+
+        if len(arguments) > 3:
+            await self.brdy.send_message(message.channel, 'Too many arguments sent.')
+
+        elif len(arguments) == 3:
+            regional_code = arguments[0]
+            maxResults = arguments[1]
+            back = arguments[2]
+
+        elif len(arguments) == 2:
+            regional_code = arguments[0]
+            maxResults = arguments[1]
+
+        elif len(arguments) == 1:
+            regional_code = arguments[0]
+
+        observations = bird_e.get_recent_observation(regional_code, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+        await self.brdy.send_message(message.channel, embed=embed)
 
     #Grabs a list of birds from a category of shape.
     async def list_birds(self, content, species_by_family, message):
@@ -89,7 +116,7 @@ class birdyCommands:
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help', 'birbs', 'fact', 'test']
+        commands = ['rand', 'help', 'birbs', 'fact', 'test', 'recent']
         usr_msg = ' '.join(content[1:]).lower()
 
         if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
@@ -106,6 +133,8 @@ class birdyCommands:
             await self.song(content[1:], message)
         elif content[1].lower() in species_by_family:
             await self.list_birds(content, species_by_family, message)
+        elif content[1].lower() == 'recent':
+            await self.get_recent(content, message)
         elif len(content) >= 2:
             await self.get_species(content[1:], message)
 

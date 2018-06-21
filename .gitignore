@@ -5,6 +5,7 @@ Audio/
 Bird_e/
 Birds.zip
 __pycache__/
+eBirdAPI.py
 birds.db
 testing.py
 allbirdsscraper.py
