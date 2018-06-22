@@ -19,22 +19,26 @@ class birdyCommands:
 
     def __init__(self, brdy):
         self.brdy = brdy
-
+    #Testing this function out with one sample mp3
+    #In the future, this function will return a song from a bird
     async def song(self, content, message):
         await self.brdy.send_file(message.channel, "Audio/Auks/Ancient Murrelet/song.mp3")
 
+    #facts() just returns facts from a list of facts retrieved from https://www.factretriever.com/bird-facts
     async def facts(self, content, message):
         fact = factlist[str(random.randint(1,100))]
         embed = discord.Embed(title='Fact:', description=fact, color=0x6606BA)
 
         await self.brdy.send_message(message.channel, embed=embed)
 
+    #Grabs random images from a meme folder.
     async def birbs(self, content, message):
         meme_index = random.randint(1,174)
         filename = "Memes/{}.jpg".format(meme_index)
 
         await self.brdy.send_file(message.channel, filename)
 
+    #Using the eBird API, it grabs recent sightings from a specified location and region.
     async def get_recent(self, content, message):
         variables = ' '.join(content[2:])
         arguments = variables.split(' ')
@@ -44,20 +48,69 @@ class birdyCommands:
 
         if len(arguments) > 3:
             await self.brdy.send_message(message.channel, 'Too many arguments sent.')
-
         elif len(arguments) == 3:
             regional_code = arguments[0]
             maxResults = arguments[1]
             back = arguments[2]
-
         elif len(arguments) == 2:
             regional_code = arguments[0]
             maxResults = arguments[1]
-
         elif len(arguments) == 1:
             regional_code = arguments[0]
 
         observations = bird_e.get_recent_observation(regional_code, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+        await self.brdy.send_message(message.channel, embed=embed)
+
+    #Same as the get_recent() function, but outputs notable sightings.
+    async def get_recent_notable(self, content, message):
+        variables = ' '.join(content[3:])
+        arguments = variables.split(' ')
+        regional_code = ''
+        maxResults = '25'
+        back = ''
+
+        if len(arguments) > 3:
+            await self.brdy.send_message(message.channel, 'Too many arguments sent.')
+        elif len(arguments) == 3:
+            regional_code = arguments[0]
+            maxResults = arguments[1]
+            back = arguments[2]
+        elif len(arguments) == 2:
+            regional_code = arguments[0]
+            maxResults = arguments[1]
+        elif len(arguments) == 1:
+            regional_code = arguments[0]
+
+        observations = bird_e.get_recent_notable_observation(regional_code, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+        await self.brdy.send_message(message.channel, embed=embed)
+
+    #Grabs info on specified species.
+    async def get_recent_species(self, content, message):
+        variables = ' '.join(content[2:])
+        arguments = variables.split(' ')
+        speciescode = ''
+        regional_code = ''
+        maxResults = '25'
+        back = ''
+
+        if len(arguments) > 4:
+            await self.brdy.send_message(message.channel, 'Too many arguments sent.')
+        elif len(arguments) == 4:
+            speciescode = arguments[0]
+            regional_code = arguments[1]
+            maxResults = arguments[2]
+            back = arguments[3]
+        elif len(arguments) == 3:
+            speciescode = arguments[0]
+            regional_code = arguments[1]
+            maxResults = arguments[2]
+        elif len(arguments) == 2:
+            speciescode = arguments[0]
+            regional_code = arguments[1]
+
+        observations = bird_e.get_recent_species_observation(regional_code, speciescode, maxResults, back)
         embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
         await self.brdy.send_message(message.channel, embed=embed)
 
@@ -116,7 +169,7 @@ class birdyCommands:
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help', 'birbs', 'fact', 'test', 'recent']
+        commands = ['rand', 'help', 'birbs', 'fact', 'test', 'recent', 'notable', 'species']
         usr_msg = ' '.join(content[1:]).lower()
 
         if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
@@ -133,8 +186,12 @@ class birdyCommands:
             await self.song(content[1:], message)
         elif content[1].lower() in species_by_family:
             await self.list_birds(content, species_by_family, message)
-        elif content[1].lower() == 'recent':
+        elif content[1].lower() == 'recent' and content[2].lower() not in commands:
             await self.get_recent(content, message)
+        elif content[1].lower() == 'recent' and content[2].lower() == 'notable':
+            await self.get_recent_notable(content, message)
+        elif content[1].lower() == 'species':
+            await self.get_recent_species(content, message)
         elif len(content) >= 2:
             await self.get_species(content[1:], message)
 
