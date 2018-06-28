@@ -114,9 +114,45 @@ class birdyCommands:
         embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
         await self.brdy.send_message(message.channel, embed=embed)
 
+    #Assuming the user knows the latitude and longitude coordinates of the location they want
+    #this function grabs those coordinates and finds observations with a radius (dist)
+    async def get_nearby(self, content, message):
+        variables = ' '.join(content[2:])
+        arguments = variables.split(' ')
+        lat = ''
+        lon = ''
+        dist = ''
+        maxResults = '25'
+        back = ''
+
+        if len(arguments) > 5:
+            await self.brdy.send_message(message.channel, 'Too many arguments sent.')
+        elif len(arguments) == 5:
+            lat = arguments[0]
+            lon = arguments[1]
+            dist = arguments[2]
+            maxResults = arguments[3]
+            back = arguments[4]
+        elif len(arguments) == 4:
+            lat = arguments[0]
+            lon = arguments[1]
+            dist = arguments[2]
+            maxResults = arguments[3]
+        elif len(arguments) == 3:
+            lat = arguments[0]
+            lon = arguments[1]
+            dist = arguments[2]
+        elif len(arguments) == 2:
+            lat = arguments[0]
+            lon = arguments[1]
+
+        observations = bird_e.get_recent_nearby_observation(lat, lon, dist, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+        await self.brdy.send_message(message.channel, embed=embed)
+
     #Grabs a list of birds from a category of shape.
     async def list_birds(self, content, species_by_family, message):
-        birds = ""
+        birds = ''
         usr_msg = content[1].lower()
         bird_list = species_by_family[usr_msg.lower()]
         for i in range(0, len(bird_list)):
@@ -169,7 +205,7 @@ class birdyCommands:
 
 
     async def handle_command(self, content, message, species_by_family):
-        commands = ['rand', 'help', 'birbs', 'fact', 'test', 'recent', 'notable', 'species']
+        commands = ['rand', 'help', 'birbs', 'fact', 'test', 'recent', 'notable', 'species', 'nearby']
         usr_msg = ' '.join(content[1:]).lower()
 
         if content[1].lower() not in commands and usr_msg not in species_by_family and usr_msg not in birds:
@@ -192,6 +228,8 @@ class birdyCommands:
             await self.get_recent_notable(content, message)
         elif content[1].lower() == 'species':
             await self.get_recent_species(content, message)
+        elif content[1].lower() == 'nearby':
+            await self.get_nearby(content, message)
         elif len(content) >= 2:
             await self.get_species(content[1:], message)
 
