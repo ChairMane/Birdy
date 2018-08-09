@@ -11,3 +11,5 @@ testing.py
 allbirdsscraper.py
 BirdyOLD.py
 testdata.json
+async_error_handler.py
+test.mp3

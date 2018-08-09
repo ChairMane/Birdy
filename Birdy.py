@@ -4,33 +4,26 @@ import random
 import json
 from birdyCommands import *
 from data_holder import *
+from discord.ext import commands
 
 config = json.load(open('config.json'))
 
-pfx = '<>'
+bot = commands.Bot(command_prefix='--')
 
-class Birdy(discord.Client):
+extensions = ['birdyCommands']
 
-    async def on_ready(self):
-        self.com = birdyCommands(self)
-        print('Logged in as')
-        print(brdy.user.name)
-        print(brdy.user.id)
-        print('------')
+@bot.event
+async def on_ready():
+    print('Logged in as')
+    print(bot.user.name)
+    print(bot.user.id)
+    print('------')
 
-    async def on_message(self, message):
-        # we do not want the bot to reply to itself
-        if message.author == brdy.user:
-            return
+if __name__ == '__main__':
+    for extension in extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as error:
+            print('{} cannot be loaded. [{}]'.format(Exception, error))
 
-        content = message.content.split(' ')
-
-        if pfx != content[0]:
-            return
-
-        if pfx == content[0]:
-            # send to birdyCommands.handle_command() to do something with
-            await self.com.handle_command(content, message, species_by_family)
-
-brdy = Birdy()
-brdy.run(config['token'])
+bot.run(config['token'])
