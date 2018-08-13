@@ -5,6 +5,7 @@ from async_error_handler import *
 import json
 import discord
 import random
+import dateparser
 
 #TODO- Try accessing eBird API, for sightings. (Look into REST API)
 #TODO- Look into maybe using ext.commands at one point
@@ -41,7 +42,6 @@ class birdyCommands:
     async def birbs(self, ctx):
         meme_index = random.randint(1,174)
         filename = "Memes/{}.jpg".format(meme_index)
-        print(ctx.message.content)
 
         await self.bot.send_file(ctx.message.channel, filename)
 
@@ -86,6 +86,39 @@ class birdyCommands:
         observations = bird_e.get_species_nearby_observation(speciesCode, lat, lon, dist, maxResults, back)
         embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
 
+        await self.bot.send_message(ctx.message.channel, embed=embed)
+
+    #Assuming the user knows the latitude and longitude coordinates of the location they want
+    #this function grabs those coordinates and finds nearest observations with a radius (dist)
+    @commands.command(pass_context=True, name='nearest')
+    async def get_nearest_species(self, ctx, speciesCode, lat, lon, dist=None, maxResults='25', back=None):
+
+        observations = bird_e.get_nearest_species_observation(speciesCode, lat, lon, dist, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+
+        await self.bot.send_message(ctx.message.channel, embed=embed)
+
+    # Assuming the user knows the latitude and longitude coordinates of the location they want
+    # this function grabs those coordinates and finds observations with a radius (dist)
+    @commands.command(pass_context=True, name='nearby_notable')
+    async def get_nearby_notable(self, ctx, lat, lon, dist=None, maxResults='25', back=None):
+
+        observations = bird_e.get_nearby_notable_observation(lat, lon, dist, maxResults, back)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
+        await self.bot.send_message(ctx.message.channel, embed=embed)
+
+
+    # Assuming the user knows the latitude and longitude coordinates of the location they want
+    # this function grabs those coordinates and finds observations with a radius (dist)
+    @commands.command(pass_context=True, name='historic')
+    async def get_historic(self, ctx, regionCode, date, maxResults='25'):
+
+        year = str(dateparser.parse(date).year)
+        month = str(dateparser.parse(date).month)
+        day = str(dateparser.parse(date).day)
+
+        observations = bird_e.get_historic_observation(regionCode, year, month, day, maxResults)
+        embed = discord.Embed(title='Sightings:', description=observations, color=0x6606BA)
         await self.bot.send_message(ctx.message.channel, embed=embed)
 
     #Grabs a list of birds from a category of shape.
