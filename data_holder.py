@@ -31,46 +31,20 @@ species_by_family = { 'sparrow'         : ['aberts towhee', 'american pipit', 'a
                     }
 
 help_message = "```fix\n" \
-               "INFO: Creator of this bot is ChairMane: https://github.com/ChairMane/Birdy\n\n" \
-               "DESCRIPTION: Birdy is for those discord users who are interested\n" \
-               "in birds.\n\n" \
-               "COMMAND PREFIX: To be able to use the commands, '<>' must be\n" \
-               "present before any commands are used.\n\n" \
-               "Below are commands available:\n\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> <shape_of_bird>\n" \
-               "EXAMPLES:             <> sparrow\n" \
-               "                      <> finch\n" \
-               "DESCRIPTION: This command gives the user a list of birds within\n" \
-               "the shape of bird category. So if you want a list of birds that\n" \
-               "have the shape of a sparrow, you input <> sparrow.\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> <name_of_bird>\n" \
-               "EXAMPLES:             <> white crowned sparrow\n" \
-               "                      <> northern parula\n" \
-               "DESCRIPTION: If you know the name of the bird you want,\n" \
-               "you can call this command to grab information on it.\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> rand\n" \
-               "DESCRIPTION: Use <> rand to grab information on a random\n" \
-               "within the Birdy database.\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> rand <shape_of_bird>\n" \
-               "EXAMPLES:             <> rand finch\n" \
-               "                      <> rand sparrow\n" \
-               "DESCRIPTION: If you want a random bird within a specific\n" \
-               "bird shape category, you call this command.\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> help\n" \
-               "DESCRIPTION: If you forget commands, you can call this\n" \
-               "command to get a list of commands.\n" \
-               "____________________________________________________\n\n" \
-               "COMMAND:              <> birbs\n" \
-               "DESCRIPTION: Just bird memes.\n" \
-               "____________________________________________________\n\n" \
-               "LIST OF CURRENT BIRD SHAPES:\n" \
-               "Sparrow, Finch, Warbler, Hummingbird, Auk, Blackbird, Crow, Dove,\n" \
-               "Duck, Falcon, Flycatcher, Game Bird, Gull, Hawk, Heron, Jay, Kingfisher,\n" \
-               "Nuthatch, Owl, Parrot, Seabird, Shorebird, Swallow, Swift, Tern, Thrush, \n" \
-               "Vulture, Woodpecker and Wren.\n" \
+               "Commands below:\n" \
+               "'rand <optional_bird_family>'                          |->  returns random bird.\n" \
+               "'birbs'                                                |->  returns bird meme.\n" \
+               "'facts'                                                |->  returns random bird fact.\n" \
+               "'bird <name_of_bird>'                                  |->  returns requested bird.\n" \
+               "'list'                                                 |->  returns list of birds.\n" \
+               "'info'                                                 |->  returns this message.\n" \
+               "'recent <region>'                                      |->  returns recent sighting.\n" \
+               "'recent_notable <region>'                              |->  returns notable recent sighting.\n" \
+               "'recent_species <speciesCode> <region>'                |->  returns recent species sighting.\n" \
+               "'nearby <latitude> <longitude>'                        |->  returns nearby sighting.\n" \
+               "'nearby_species <species_code> <latitude> <longitude>' |->  returns nearby species sighting.\n" \
+               "'nearby_notable <latitude> <longitude>'                |->  returns nearby notable sighting.\n" \
+               "'nearest <latitude> <longitude>'                       |->  returns nearest sighting.\n" \
+               "'historic <region> <mm/dd/yyyy>'                       |->  returns historic sighting.\n" \
+               "'top100 <region> <mm/dd/yyyy>'                         |->  returns top 100 eBird users.\n" \
                "```"
