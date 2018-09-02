@@ -2,6 +2,10 @@ from data_holder import *
 from eBirdAPI import *
 from discord.ext import commands
 from async_error_handler import *
+from google_images_download import google_images_download
+from difflib import SequenceMatcher
+import string
+import sqlite3
 import json
 import discord
 import random
@@ -43,6 +47,49 @@ class birdyCommands:
         embed = discord.Embed(title='Fact:', description=fact, color=0x6606BA)
         await self.bot.say(embed=embed)
 
+    @commands.command(pass_context=True)
+    async def bird(self, ctx, *name):
+        """
+        For when you know the bird name, you can use this instead of rand.
+        ```--bird <name>```
+
+        `EXAMPLE`:
+        ```--bird white crowned sparrow``` -> Returns white crowned sparrow image and info.
+
+        `name`:             Name of the species
+
+        `return`:           An image of said bird and information on it.
+        """
+        response = google_images_download.googleimagesdownload()  # class instantiation
+        birdname = ' '.join(name)
+        want = self.get_name('Birds.db', birdname)
+        max = 0
+        correctname = ''
+        for names in want:
+            if self.similar(birdname, names[0]) > max:
+                max = self.similar(birdname, names[0])
+                correctname = names[0]
+        if max >= 0.80:
+            arguments = {"keywords": correctname, "safe_search": True, "metadata": False, "limit": 5, "size": ">800*600",
+                         "format": "jpg", "no_directory": True, "output_directory": "birdy"}
+        elif max > 0.70 and max < 0.80:
+            await self.bot.say('Did you mean: `' + correctname + '`?')
+        else:
+            await self.bot.say('Not a bird.')
+
+        paths = response.download(arguments)  # passing the arguments to the function
+        links = []
+
+        for dict in paths:
+            links.append(dict['image_link'])
+
+        image_url = self.get_random(links)
+
+        embed = discord.Embed(title='Name', description=correctname.title())
+        embed.set_image(url=image_url)
+        #embed.add_field(name=correctname, inline=False)
+        await self.bot.say(embed=embed)
+
     #Grabs random images from a meme folder.
     @commands.command(pass_context=True)
     async def birbs(self, ctx):
@@ -67,13 +114,13 @@ class birdyCommands:
         `EXAMPLE`:
         ```--recent US-CA 25 30```\n --> Looks in California, Returns 25 results, back 30 days.
 
-        regional_code: `<country>-<state/province>-<county_number>`
+        `regional_code`: `<country>-<state/province>-<county_number>`
 
-        maxResults: How many results wanted. May not return over 25.
+        `maxResults`: How many results wanted. May not return over 25.
 
-        back: How many days you want to go back. Max is 30 days.
+        `back`: How many days you want to go back. Max is 30 days.
 
-        return: List of sightings.
+        `return`: List of sightings.
         """
 
         observations = bird_e.get_recent_observation(regional_code, maxResults, back)
@@ -396,68 +443,36 @@ class birdyCommands:
 
     #rand() grabs a random bird from the dictionary image_dict and outputs
     #basic information about the random bird grabbed
-    @commands.command(pass_context=True)
-    async def rand(self, ctx, family_name=''):
+    @commands.command()
+    async def rand(self):
         """
         For grabbing random bird images and information.
-        ```--rand [family_name='']```
+        ```--rand```
 
         `EXAMPLE`:
         ```--rand``` -> Returns a random bird.
 
-        `family_name`:    Optional argument, in case you wanted a random bird family.
-
         `return`:        A random bird image and information on that bird.
         """
 
-        #If <> rand <shape_of_bird> was called, you would get only a random bird within
-        #the shape of the bird category.
-        if (len(family_name) > 0):
-            #family_name = ' '.join(content[1:]).lower()
-            get_family = species_by_family[family_name.lower()]
-            rand_bird = random.choice(get_family)
+        response = google_images_download.googleimagesdownload()  # class instantiation
+        want = self.get_rand_name('Birds.db')
+        name = self.get_random(want)
+        arguments = {"keywords": name[0], "safe_search": True, "metadata": False, "limit": 5, "size": ">1024*768",
+                     "format": "jpg", "no_directory": True, "output_directory": "birdy"}
 
-            name, species, desc, filename_list = birds[rand_bird]
-            embed = discord.Embed(title='Name', description=species, color=0x6606BA)
-            embed.add_field(name="Description", value=desc, inline=False)
+        paths = response.download(arguments)  # passing the arguments to the function
+        links = []
 
-            await self.bot.send_file(ctx.message.channel, self.get_random(filename_list))
-            await self.bot.send_message(ctx.message.channel, embed=embed)
+        for dict in paths:
+            links.append(dict['image_link'])
 
-        #Otherwise just output a random bird from the entire dictionary
-        else:
-            rand_key = random.choice(list(birds))
-            name, species, desc, filename_list = birds[rand_key]
+        image_url = self.get_random(links)
 
-            embed = discord.Embed(title='Name', description=species, color=0x6606BA)
-            embed.add_field(name="Description", value=desc, inline=False)
-
-            await self.bot.send_file(ctx.message.channel, self.get_random(filename_list))
-            await self.bot.send_message(ctx.message.channel, embed=embed)
-
-    #get_species() grabs a bird from the dictionary with the same name inputted by the
-    #user. EXAMPLE: <> white crowned sparrow
-    @commands.command(pass_context=True)
-    async def bird(self, ctx, *bird_name):
-        """
-        For when you know the bird name, you can use this instead of rand.
-        ```--bird <bird_name>```
-
-        `EXAMPLE`:
-        ```--bird white crowned sparrow``` -> Returns white crowned sparrow image and info.
-
-        `bird_name`:        Name of the species
-
-        `return`:           An image of said bird and information on it.
-        """
-
-        bird = ' '.join(bird_name)
-        name, species, desc, filename_list = birds[bird.lower()]
-        embed = discord.Embed(title='Name', description=species, color=0x6606BA)
-        embed.add_field(name="Description", value=desc, inline=False)
-
-        await self.bot.send_file(ctx.message.channel, self.get_random(filename_list))
-        await self.bot.send_message(ctx.message.channel, embed=embed)
+        embed = discord.Embed(title='Name', description=name[0].title())
+        embed.set_image(url=image_url)
+        #embed.add_field(name=correctname, inline=False)
+        await self.bot.say(embed=embed)
 
     def get_random(self, mylist):
         r = random.randrange(len(mylist))
@@ -466,6 +481,32 @@ class birdyCommands:
     async def on_command_error(self, error, ctx):
         if isinstance(error, commands.CommandNotFound):
             await self.bot.send_message(ctx.message.channel, 'Command not found. Use `--help` for more information.')
+
+    def similar(self, a, b):
+        return SequenceMatcher(None, a, b).ratio()
+
+    def get_name(self, database_file, bird):
+
+        connection = sqlite3.connect(database_file)
+        cursor = connection.cursor()
+        result = cursor.execute("SELECT * FROM {}".format(bird[0]))
+        want = result.fetchall()
+        cursor.close()
+        connection.close()
+
+        return want
+
+    def get_rand_name(self, database_file):
+        letters = list(string.ascii_lowercase)
+        rand_letter = self.get_random(letters)
+        connection = sqlite3.connect(database_file)
+        cursor = connection.cursor()
+        result = cursor.execute("SELECT * FROM {}".format(rand_letter))
+        want = result.fetchall()
+        cursor.close()
+        connection.close()
+
+        return want
 
     @commands.command(pass_context=True)
     async def help(self, ctx, arg=None):
