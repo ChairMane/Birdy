@@ -4,6 +4,7 @@ from discord.ext import commands
 from async_error_handler import *
 from google_images_download import google_images_download
 from difflib import SequenceMatcher
+import regex
 import string
 import sqlite3
 import json
@@ -61,19 +62,26 @@ class birdyCommands:
         `return`:           An image of said bird and information on it.
         """
         response = google_images_download.googleimagesdownload()  # class instantiation
-        birdname = ' '.join(name)
+        birdname = ' '.join(name).lower()
         want = self.get_name('Birds.db', birdname)
         max = 0
         correctname = ''
+        replies = ('yes','y', 'ya', 'yah','yeah','yea','yeh', 'ye', 'yass', 'yass, queen', 'ok', 'okay', 'affirmative', 'aye aye', 'roger', 'uh-huh', '10-4', 'yup', 'yuppers', 'ja', 'fo shizzle', 'totally', 'sure', 'yessir')
         for names in want:
             if self.similar(birdname, names[0]) > max:
                 max = self.similar(birdname, names[0])
                 correctname = names[0]
         if max >= 0.80:
-            arguments = {"keywords": correctname, "safe_search": True, "metadata": False, "limit": 5, "size": ">800*600",
+            arguments = {"keywords": correctname.lower(), "safe_search": True, "metadata": False, "limit": 5, "size": ">800*600",
                          "format": "jpg", "no_directory": True, "output_directory": "birdy"}
         elif max > 0.70 and max < 0.80:
-            await self.bot.say('Did you mean: `' + correctname + '`?')
+            await self.bot.say('Did you mean: `' + correctname.title() + '`?')
+            user_response = await self.bot.wait_for_message(timeout=10, author=ctx.message.author)
+            if user_response.content.lower() in replies:
+                arguments = {"keywords": correctname.lower(), "safe_search": True, "metadata": False, "limit": 5, "size": ">800*600",
+                         "format": "jpg", "no_directory": True, "output_directory": "birdy"}
+            else:
+                return
         else:
             await self.bot.say('Not a bird.')
 
@@ -92,15 +100,21 @@ class birdyCommands:
 
     #Grabs random images from a meme folder.
     @commands.command(pass_context=True)
-    async def birbs(self, ctx):
+    async def birbs(self, ctx, number=None):
         """
         Returns a random bird meme.
 
         `EXAMPLE`:
         ```--birbs```
         """
-        meme_index = random.randint(1,174)
-        filename = "Memes/{}.jpg".format(meme_index)
+
+        if number==None:
+            meme_index = random.randint(1,198)
+            filename = "Memes/{}.jpg".format(meme_index)
+        elif int(number) < 1 or int(number) > 198:
+            await self.bot.say('There are currently only 198 memes.')
+        elif number:
+            filename = "Memes/{}.jpg".format(number)
 
         await self.bot.send_file(ctx.message.channel, filename)
 
