@@ -11,13 +11,16 @@ Currently there are no prerequisites as this project is not ready to be publicly
 At this moment, there are a few functions implemented. Some of these functions are going to be rewritten to be more efficient. There are also functions I have planned on making in the future. Some of these planned functions are to change the prefix from server-to-server (default prefix is ```<>```).
 
 **Current functions implemented:**
-	- **```<> <shape_of_bird> ```** 
-         - This function returns a list of birds to your private messages. (This function will be reworked as it does not categorize birds into correct families.)
-	  - **Example** ```<> sparrow```
-	  		```<> finch```
-			```<> falcon```
-	- **```<> <name_of_species>```**
-         - This function returns an image of the bird with some basic info on the species.
-	  - **Example** ```<> white crowned sparrow```
-	  		```<> american kestrel```
-			```<> painted bunting```
+- **```-- <shape_of_bird> ```** 
+  - This function returns a list of birds to your private messages. (This function will be reworked as it does not categorize birds into correct families.)
+  - **Example** ```<> sparrow```
+	  	```<> finch```
+		```<> falcon```
+- **```<> <name_of_species>```**
+  - This function returns an image of the bird with some basic info on the species.
+  - **Example** ```<> white crowned sparrow```
+	  	```<> american kestrel```
+		```<> painted bunting```
+# TODO
+* Fix README
+* Current README info is not correct
